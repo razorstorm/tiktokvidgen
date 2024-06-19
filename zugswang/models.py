@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass, field
 import hashlib
 import os
@@ -5,6 +6,9 @@ from typing import Iterable, List, Optional, Tuple, Union
 
 import chess
 import chess.svg
+import cairosvg
+import moviepy
+import moviepy.editor
 
 from zugswang.elevenlabs import generate_audio_from_text
 
@@ -16,8 +20,26 @@ class Puzzle:
     puzzleid: str
     fen: str
     rating: int
+    ratingdeviation: int
     moves: List[str]
     themes: List[str]
+
+    @property
+    def difficulty(self):
+        if self.rating < 1200:
+            return "easy"
+        elif self.rating < 1800:
+            return "medium"
+        elif self.rating < 2400:
+            return "hard"
+        elif self.rating < 3000:
+            return "grand master"
+        else:
+            return "?"
+
+    @property
+    def orientation(self):
+        return chess.WHITE if self.fen.split()[1] == "b" else chess.BLACK
 
 
 @dataclass
@@ -43,11 +65,21 @@ class Scene:
     narration: Narration
     board: chess.Board
     arrows: Iterable[Union[chess.svg.Arrow, Tuple[chess.Square, chess.Square]]]
-    lastmove: Optional[chess.Move] = None
+    orientation: Optional[chess.Color]
+    lastmove: Optional[chess.Move]
+
+    def __init__(self, name, narration, board, arrows, orientation=chess.WHITE, lastmove=None):
+        self.name = name
+        self.narration = narration
+        self.board = copy.deepcopy(board)
+        self.arrows = arrows
+        self.orientation = orientation
+        self.lastmove = copy.deepcopy(lastmove)
 
     def generate_svg(self, size):
         svg = chess.svg.board(
             board=self.board,
+            orientation=self.orientation,
             arrows=self.arrows,
             lastmove=self.lastmove,
             size=size,
@@ -57,3 +89,29 @@ class Scene:
             },
         )
         return svg
+    
+    def generate_clip(self, id, canvas, output_dir, width, pause_duration):
+        svg_path = os.path.join(output_dir, f"{id}.png")
+        svg = self.generate_svg(size=width)
+        cairosvg.svg2png(bytestring=svg, write_to=svg_path)
+
+        narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
+        pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
+        audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
+        board_clip = moviepy.editor.ImageClip(svg_path)
+        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", method="caption", size=(width, None))
+        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+        scene_clip = moviepy.editor.CompositeVideoClip(
+            [
+                canvas,
+                board_clip.set_position((0, 64)),
+                title_clip.set_position((0, 64 + width + 64)),
+                caption_clip.set_position((0, 64 + width + 64 + title_clip.size[1] + 64)),
+            ],
+            size=canvas.size
+        )
+        scene_clip = scene_clip.set_audio(audio_clip)
+        scene_clip = scene_clip.set_duration(audio_clip.duration)
+        scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
+
+        return scene_clip
