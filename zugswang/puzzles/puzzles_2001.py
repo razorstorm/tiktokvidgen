@@ -4,8 +4,6 @@ import chess.svg
 
 from zugswang.models import Narration, Puzzle, Scene
 
-clips = []
-
 puzzle = Puzzle(
     puzzleid='DirK4',
     fen='8/8/pp6/3k4/1P6/PK6/8/8 w - - 4 46',

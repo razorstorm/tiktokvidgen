@@ -10,7 +10,7 @@ width = 1080
 height = 1920 - 128
 
 
-def generate_video(scenes: List[Scene], output_dir: str, pause_duration: float=1.0):
+def generate_video(scenes: List[Scene], output_dir: str, pause_duration: float=0.5):
     os.makedirs(output_dir, exist_ok=True)
 
     canvas = moviepy.editor.ColorClip((width, height), col=(0, 0, 0))

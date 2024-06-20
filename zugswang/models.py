@@ -48,7 +48,7 @@ class Narration:
     voice_id: str
     audio_path: str
 
-    def __init__(self, text: str, voice_id: str="uYkKk3J4lEp7IHQ8CLBi"):
+    def __init__(self, text: str, voice_id: str="EODKX28NbkUPd7QWJ7yr"):
         self.text = text
         self.voice_id = voice_id
         audio_hash = hashlib.sha256(text.encode()).hexdigest()
