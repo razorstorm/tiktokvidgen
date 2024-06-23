@@ -2,7 +2,7 @@ import os
 import chess
 import chess.svg
 
-from zugswang.models import Narration, Puzzle, Scene
+from zugswang.models import Narration, Puzzle, ChessScene
 
 puzzle = Puzzle(
     puzzleid='uQj06',
@@ -15,7 +15,7 @@ puzzle = Puzzle(
 
 board = chess.Board(puzzle.fen)
 
-opening_scene = Scene(
+opening_scene = ChessScene(
     name="Daily Chess Puzzle",
     narration=Narration("Can you find the winning combination?"),
     board=board,
@@ -29,7 +29,7 @@ board.push(lastmove)
 piece = board.piece_at(lastmove.to_square)
 piece_name = chess.piece_name(piece.piece_type).lower()
 move_name = f"{piece_name} to {chess.SQUARE_NAMES[lastmove.to_square]}"
-puzzle_start_scene = Scene(
+puzzle_start_scene = ChessScene(
     name=f"Puzzle: {puzzle.difficulty} ({puzzle.rating} elo)",
     narration=Narration(f"It starts with {'white' if puzzle.orientation != chess.WHITE else 'black'} playing {move_name}."),
     board=board,
@@ -38,7 +38,7 @@ puzzle_start_scene = Scene(
     lastmove=lastmove,
 )
 
-puzzle_hint_1_scene = Scene(
+puzzle_hint_1_scene = ChessScene(
     name="Puzzle: hint 1",
     narration=Narration("We should always consider available checks. Here, there are 3."),
     board=board,
@@ -51,7 +51,7 @@ puzzle_hint_1_scene = Scene(
     lastmove=lastmove,
 )
 
-puzzle_hint_2_scene = Scene(
+puzzle_hint_2_scene = ChessScene(
     name="Puzzle: hint 2",
     narration=Narration("Since the pawn has 2 defenders and 2 attackers, we should not take it."),
     board=board,
@@ -65,7 +65,7 @@ puzzle_hint_2_scene = Scene(
     lastmove=lastmove,
 )
 
-puzzle_hint_3_scene = Scene(
+puzzle_hint_3_scene = ChessScene(
     name="Puzzle: hint 3",
     narration=Narration("We could instead deliver a check with the rook. White has no good moves to block, but they can just sidestep the check."),
     board=board,
@@ -81,7 +81,7 @@ puzzle_hint_3_scene = Scene(
 lastmove = chess.Move.from_uci(puzzle.moves[1])
 board.push(lastmove)
 
-move_1_scene = Scene(
+move_1_scene = ChessScene(
     name="Puzzle: move 1",
     narration=Narration("But if we check with the queen, it's a double attack on the king and the rook. There is no way to defend both pieces at once."),
     board=board,
@@ -96,7 +96,7 @@ move_1_scene = Scene(
 lastmove = chess.Move.from_uci(puzzle.moves[2])
 board.push(lastmove)
 
-move_2_scene = Scene(
+move_2_scene = ChessScene(
     name="Puzzle: move 2",
     narration=Narration("White moves the king"),
     board=board,
@@ -110,7 +110,7 @@ move_2_scene = Scene(
 lastmove = chess.Move.from_uci(puzzle.moves[3])
 board.push(lastmove)
 
-move_3_scene = Scene(
+move_3_scene = ChessScene(
     name="Puzzle: move 3",
     narration=Narration("And we win a free rook."),
     board=board,

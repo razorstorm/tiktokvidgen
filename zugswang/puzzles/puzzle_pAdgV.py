@@ -2,7 +2,7 @@ import os
 import chess
 import chess.svg
 
-from zugswang.models import Narration, Puzzle, Scene
+from zugswang.models import Narration, Puzzle, ChessScene
 
 puzzle = Puzzle(
     puzzleid='pAdgV',
@@ -17,7 +17,7 @@ scenes = []
 
 board = chess.Board(puzzle.fen)
 
-scene = Scene(
+scene = ChessScene(
     name="Daily Chess Puzzle",
     narration=Narration("Think fast? Think again. This puzzle demands patience."),
     board=board,
@@ -33,7 +33,7 @@ puzzle_name = f"Puzzle: {puzzle.difficulty} ({puzzle.rating} elo)"
 piece = board.piece_at(lastmove.to_square)
 piece_name = chess.piece_name(piece.piece_type).lower()
 move_name = f"{piece_name} to {chess.SQUARE_NAMES[lastmove.to_square]}"
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration(f"It starts with {'white' if puzzle.orientation != chess.WHITE else 'black'} playing {move_name}."),
     board=board,
@@ -43,7 +43,7 @@ scene = Scene(
 )
 scenes.append(scene)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We have many ways to recapture the rook, but there's no need to rush, do we have a better move?"),
     board=board,
@@ -60,7 +60,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[1])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We have a check available with bishop h4."),
     board=board,
@@ -72,7 +72,7 @@ scene = Scene(
 )
 scenes.append(scene)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("White cannot move the king onto the open F file and allow recapturing the rook with check."),
     board=board,
@@ -90,7 +90,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[2])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("So white blocks with the rook."),
     board=board,
@@ -102,7 +102,7 @@ scene = Scene(
 )
 scenes.append(scene)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We could take it and win an exchange. But again, there's no rush."),
     board=board,
@@ -114,7 +114,7 @@ scene = Scene(
 )
 scenes.append(scene)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("Notice the knight on e5 has only 1 defender, but is attacked twice."),
     board=board,
@@ -131,7 +131,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[3])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We can force the trade, and in the end we'll win a pawn, reveal the rook attack and pin on the knight, and we can still capture the pinned rook on f2 afterwards, it's gg."),
     board=board,

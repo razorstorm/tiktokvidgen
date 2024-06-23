@@ -3,6 +3,11 @@ env/
 venv/
 __pycache__/
 
+.DS_Store
+*.swp
+*.swo
+*.log
+
 .env
 *.pyc
 *.egg-info/
@@ -13,3 +18,5 @@ temp/
 tmp/
 temp.*
 tmp.*
+
+*.mp3

@@ -9,7 +9,7 @@
     - [ ] create specialized prompt for finding a video idea (from a library)
     - [ ] create specialized prompt for intro, interjections, etc
 
-## TODO
+## Chess TODO
 - [ ] use `Puzzle` abstraction (find a way to include it into a scene)
 
 ## Puzzles

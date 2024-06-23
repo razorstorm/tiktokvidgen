@@ -2,7 +2,7 @@ import os
 import chess
 import chess.svg
 
-from zugswang.models import Narration, Puzzle, Scene
+from zugswang.models import Narration, Puzzle, ChessScene
 from zugswang.utils import show_attacks
 
 puzzle = Puzzle(
@@ -19,7 +19,7 @@ scenes = []
 
 board = chess.Board(puzzle.fen)
 
-scene = Scene(
+scene = ChessScene(
     name="Daily Chess Puzzle",
     narration=Narration("Would you be brave enough for this line?", voice_id=voice_id),
     board=board,
@@ -35,7 +35,7 @@ puzzle_name = f"Puzzle: {puzzle.difficulty} ({puzzle.rating} elo)"
 piece = board.piece_at(lastmove.to_square)
 piece_name = chess.piece_name(piece.piece_type).lower()
 move_name = f"{piece_name} to {chess.SQUARE_NAMES[lastmove.to_square]}"
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration(f"{'White' if puzzle.orientation != chess.WHITE else 'Black'} plays {move_name}.", voice_id=voice_id),
     board=board,
@@ -46,7 +46,7 @@ scene = Scene(
 scenes.append(scene)
 
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We ignore the obvious threat. If he dies, he dies. We've got bigger plans.", voice_id=voice_id),
     board=board,
@@ -61,7 +61,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[1])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We move our queen to the open H file, threatening mate in 1.", voice_id=voice_id),
     board=board,
@@ -78,7 +78,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[2])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("White takes the knight, eliminating the mate threat, but we have one more trick.", voice_id=voice_id),
     board=board,
@@ -95,7 +95,7 @@ scenes.append(scene)
 lastmove = chess.Move.from_uci(puzzle.moves[3])
 board.push(lastmove)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration("We push the pawn, cutting off white's queen, and removing the king's escape square, once again threatening mate in 1. White can sacrifice the queen, but it won't be enough. GG.", voice_id=voice_id),
     board=board,

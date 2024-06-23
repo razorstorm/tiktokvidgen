@@ -65,6 +65,36 @@ class Narration:
 class Scene:
     name: str
     narration: Narration
+    media_filepath: str
+
+    def generate_clip(self, id, canvas, output_dir, width, pause_duration):
+        narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
+        pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
+        audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
+        image_clip = moviepy.editor.ImageClip(self.media_filepath)
+        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", method="caption", size=(width, None))
+        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+        scene_clip = moviepy.editor.CompositeVideoClip(
+            [
+                canvas,
+                image_clip.set_position((0, 64)),
+                title_clip.set_position((0, 64 + width + 64)),
+                caption_clip.set_position((0, 64 + width + 64 + title_clip.size[1] + 64)),
+            ],
+            size=canvas.size
+        )
+        scene_clip = scene_clip.set_audio(audio_clip)
+        scene_clip = scene_clip.set_duration(audio_clip.duration)
+        # TODO: fix `ValueError: could not broadcast input array from shape (1728,1080,2) into shape (1728,1080,3)``
+        scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
+
+        return scene_clip
+
+
+@dataclass
+class ChessScene:
+    name: str
+    narration: Narration
     board: chess.Board
     arrows: Iterable[Union[chess.svg.Arrow, Tuple[chess.Square, chess.Square]]]
     orientation: Optional[chess.Color]

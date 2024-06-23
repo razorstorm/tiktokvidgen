@@ -2,7 +2,7 @@ import os
 import chess
 import chess.svg
 
-from zugswang.models import Narration, Puzzle, Scene
+from zugswang.models import Narration, Puzzle, ChessScene
 from zugswang.utils import show_attacks
 
 puzzle = Puzzle(
@@ -23,7 +23,7 @@ scenes = []
 
 board = chess.Board(puzzle.fen)
 
-scene = Scene(
+scene = ChessScene(
     name="Daily Chess Puzzle",
     narration=generate_narration("Can you spot the tactic?"),
     board=board,
@@ -39,7 +39,7 @@ puzzle_name = f"Puzzle: {puzzle.difficulty} ({puzzle.rating} elo)"
 piece = board.piece_at(lastmove.to_square)
 piece_name = chess.piece_name(piece.piece_type).lower()
 move_name = f"{piece_name} to {chess.SQUARE_NAMES[lastmove.to_square]}"
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration(f"{'White' if puzzle.orientation != chess.WHITE else 'Black'} plays {move_name}."),
     board=board,
@@ -49,7 +49,7 @@ scene = Scene(
 )
 scenes.append(scene)
 
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration("We have a passed pawn on b3, but white controls the promotion square with the bishop."),
     board=board,
@@ -64,7 +64,7 @@ scenes.append(scene)
 
 lastmove = chess.Move.from_uci(puzzle.moves[1])
 board.push(lastmove)
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration("So we take it, and white is lost."),
     board=board,
@@ -79,7 +79,7 @@ scenes.append(scene)
 sideline = board.copy()
 sideline_move = chess.Move.from_uci("d4d1")
 sideline.push(sideline_move)
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration("White cannot stop our pawn push. If they try to move the rook back, we chase."),
     board=sideline,
@@ -93,7 +93,7 @@ scenes.append(scene)
 
 lastmove = chess.Move.from_uci(puzzle.moves[2])
 board.push(lastmove)
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration("So the best move is to take our rook."),
     board=board,
@@ -107,7 +107,7 @@ scenes.append(scene)
 
 lastmove = chess.Move.from_uci(puzzle.moves[3])
 board.push(lastmove)
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=generate_narration("We push our pawn, and the rook has no way to stop promotion. GG."),
     board=board,

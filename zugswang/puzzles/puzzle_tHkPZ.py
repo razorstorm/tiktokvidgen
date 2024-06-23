@@ -2,7 +2,7 @@ import os
 import chess
 import chess.svg
 
-from zugswang.models import Narration, Puzzle, Scene
+from zugswang.models import Narration, Puzzle, ChessScene
 
 puzzle = Puzzle(
     puzzleid='tHkPZ',
@@ -17,7 +17,7 @@ scenes = []
 
 board = chess.Board(puzzle.fen)
 
-scene = Scene(
+scene = ChessScene(
     name="Daily Chess Puzzle",
     narration=Narration("Think fast? Think again. This puzzle demands patience."),
     board=board,
@@ -33,7 +33,7 @@ puzzle_name = f"Puzzle: {puzzle.difficulty} ({puzzle.rating} elo)"
 piece = board.piece_at(lastmove.to_square)
 piece_name = chess.piece_name(piece.piece_type).lower()
 move_name = f"{piece_name} to {chess.SQUARE_NAMES[lastmove.to_square]}"
-scene = Scene(
+scene = ChessScene(
     name=puzzle_name,
     narration=Narration(f"It starts with {'white' if puzzle.orientation != chess.WHITE else 'black'} playing {move_name}."),
     board=board,

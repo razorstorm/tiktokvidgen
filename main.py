@@ -20,10 +20,10 @@ def generate_video(scenes: List[Scene], output_dir: str, pause_duration: float=0
         clip = scene.generate_clip(i, canvas, output_dir, width, pause_duration)
         clips.append(clip)
 
-    background_music = volumex(moviepy.editor.AudioFileClip("data/music/dark.mp4"), 0.5)
+    # background_music = volumex(moviepy.editor.AudioFileClip("data/music/dark.mp4"), 0.5)
     video = moviepy.editor.concatenate_videoclips(clips)
     audio = moviepy.editor.concatenate_audioclips([clip.audio for clip in clips])
-    audio = moviepy.editor.CompositeAudioClip([audio, background_music.set_duration(audio.duration)])
+    # audio = moviepy.editor.CompositeAudioClip([audio, background_music.set_duration(audio.duration)])
     video = video.set_audio(audio)
     video.write_videofile(os.path.join(output_dir, "final.mp4"), fps=24)
 
