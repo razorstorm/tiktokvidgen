@@ -34,7 +34,7 @@ def find_positions(rating, themes):
 
 
 if __name__ == "__main__":
-    puzzles = find_positions(rating=str(2000), themes=None)
+    puzzles = find_positions(rating=str(2000), themes=['crushing', 'sacrifice', 'short'])
     for puzzle in puzzles:
         print(puzzle)
         print()

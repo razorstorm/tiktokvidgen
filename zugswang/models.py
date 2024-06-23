@@ -33,7 +33,9 @@ class Puzzle:
         elif self.rating < 2400:
             return "hard"
         elif self.rating < 3000:
-            return "grand master"
+            return "master"
+        elif self.rating < 4000:
+            return "grandmaster"
         else:
             return "?"
 
@@ -115,3 +117,13 @@ class Scene:
         scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
 
         return scene_clip
+
+
+@dataclass
+class Quiz:
+    pass
+
+
+@dataclass
+class Walkthrough:
+    pass
