@@ -1,5 +1,11 @@
 # Zugzwang
 
+## Setup
+```bash
+cp .env.template .env
+```
+- generate and update API keys in `.env`
+
 ## Product
 - [ ] make videos more entertaining
     - [ ] give each piece a unique voice
