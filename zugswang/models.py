@@ -9,6 +9,9 @@ import chess.svg
 import cairosvg
 import moviepy
 import moviepy.editor
+import moviepy.video.fx.all as vfx
+from PIL import Image
+import numpy as np
 
 from zugswang.elevenlabs import generate_audio_from_text
 
@@ -67,25 +70,29 @@ class Scene:
     narration: Narration
     media_filepath: str
 
-    def generate_clip(self, id, canvas, output_dir, width, pause_duration):
+    def generate_clip(self, id, output_dir, height: int, width: int, pause_duration: float=0.25):
         narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
         pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
         audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
-        image_clip = moviepy.editor.ImageClip(self.media_filepath)
-        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", method="caption", size=(width, None))
-        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+
+        image_clip = (moviepy.editor.ImageClip(self.media_filepath)
+                        .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
+                        # .fx(vfx.resize, newsize=(height, width))
+                        .fx(vfx.crop, width=width, height=height)
+                        .fx(vfx.margin, mar=32, opacity=0))
+        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", bg_color="black", method="caption", size=(width, None))
+        # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+        
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
-                canvas,
-                image_clip.set_position((0, 64)),
-                title_clip.set_position((0, 64 + width + 64)),
-                caption_clip.set_position((0, 64 + width + 64 + title_clip.size[1] + 64)),
+                image_clip.set_position("center", "center"),
+                title_clip.set_position("top", "center"),
+                # caption_clip.set_position("center", "center"),
             ],
-            size=canvas.size
+            size=(height, width),
         )
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
-        # TODO: fix `ValueError: could not broadcast input array from shape (1728,1080,2) into shape (1728,1080,3)``
         scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
 
         return scene_clip
