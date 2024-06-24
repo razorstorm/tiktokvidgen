@@ -17,6 +17,15 @@ voice_id = "XHZMHiBtCuzEtVLE0xWF"
 scenes = []
 
 
+"""
+To Dos:
+
+Use gpt to summarize subtitles into a few short bullet points and display them with huge font
+lofi spacey/atmospheric/ethereal/trippy bg music
+more interesting bg video
+image transitions
+"""
+
 def get_narration(text: str):
     text = inspect.cleandoc(text)
     return Narration(text, voice_id=voice_id)

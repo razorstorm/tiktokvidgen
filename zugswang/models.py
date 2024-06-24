@@ -101,14 +101,14 @@ class Scene:
             moviepy.editor.TextClip(self.name, fontsize=60, font="Bebas Neue Pro", color="white", bg_color="rgba(0,0,0,0)", method="caption", size=(width, None))
             .set_duration(audio_clip.duration)
         )
-        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, color="white", method="caption", size=(width*0.8, None))
+        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
                 title_bg_color_clip.set_position("top"),
                 title_clip.set_position(["center", 70]),
-                image_clip.set_position(["center", 300]).crossfadein(duration=1).crossfadeout(duration=1),
-                caption_clip.set_position(["center", 1200]),
+                image_clip.set_position(["center", 250]).crossfadein(duration=1).crossfadeout(duration=1),
+                caption_clip.set_position(["center", 800]),
             ],
             size=(width, height),
         )
