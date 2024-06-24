@@ -7,6 +7,8 @@ import requests
 from zugswang.models import Narration, Scene
 from zugswang.openai import generate_image
 
+import moviepy.video.fx.all as vfx
+from moviepy.audio.fx.volumex import volumex
 
 data_dir = os.path.join("data")
 
@@ -181,6 +183,13 @@ if __name__ == '__main__':
     output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
     # background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, width), audio=True)
     background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, None), audio=True)
+    bg_width, bg_height = background_video.size
+    # background_video = vfx.crop(background_video, width=width, height=height, x_center=bg_width/2, y_center=bg_height/2)
+    background_video = (
+        background_video
+        .fx(vfx.crop, width=width, height=height, x_center=bg_width/2, y_center=bg_height/2)
+        .fx(volumex, 0.5)
+    )
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
 
     print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
