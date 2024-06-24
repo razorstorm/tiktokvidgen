@@ -85,8 +85,6 @@ class Narration:
         self.words = self.start_times_dict["words"]
         self.start_times = self.start_times_dict["start_times"]
         self.end_times = self.start_times_dict["end_times"]
-        
-        quit()
     
     def process_timestamps(self) -> dict[str, list[str | float]]:
         timestamp_dict: dict = {}
@@ -147,10 +145,11 @@ class Scene:
         pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
         audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
 
-        image_clip = (moviepy.editor.ImageClip(self.media_filepath)
-                        .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
-                        .fx(vfx.resize, width=width*0.7)
-                        .set_duration(audio_clip.duration)
+        image_clip = (
+            moviepy.editor.ImageClip(self.media_filepath)
+            .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
+            .fx(vfx.resize, width=width*0.7)
+            .set_duration(audio_clip.duration)
         )
         title_bg_color_clip = (
             moviepy.editor.ColorClip(size=(width, 180), color=[0,0,0,127.5])
@@ -162,16 +161,23 @@ class Scene:
         )
         # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
         caption_clips = []
-        for word, start_time in zip(self.narration.words, self.narration.start_times):
-            caption_clip = moviepy.editor.TextClip(word, fontsize=100, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)).set_start(start_time)
+        for word, start_time, end_time in zip(self.narration.words, self.narration.start_times, self.narration.end_times):
+            caption_clip = (
+                moviepy.editor.TextClip(
+                    word, fontsize=100, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
+                )
+                .set_start(start_time, change_end=False)
+                .set_end(end_time)
+                .set_position(["center", 800])
+            )
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
                 title_bg_color_clip.set_position("top"),
                 title_clip.set_position(["center", 70]),
                 image_clip.set_position(["center", 250]).crossfadein(duration=1).crossfadeout(duration=1),
-                caption_clip.set_position(["center", 800]),
-            ],
+                # caption_clip.set_position(["center", 800]),
+            ] + caption_clips,
             size=(width, height),
         )
         scene_clip = scene_clip.set_audio(audio_clip)
