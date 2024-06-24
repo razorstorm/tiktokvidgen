@@ -78,10 +78,10 @@ class Scene:
     narration: Narration
     media_filepath: str
 
-    def generate_clip(self, id, output_dir, height: int, width: int, pause_duration: float=0.25):
+    def generate_clip(self, id, output_dir, width: int, height: int, pause_duration: float=0.25):
 
-        print(f"generate_clip {height}x{width}")
-        
+        print(f"generate_clip {width}x{height}")
+
         narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
         pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
         audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
@@ -100,7 +100,7 @@ class Scene:
                 image_clip.set_position("center", "center"),
                 # caption_clip.set_position("center", "center"),
             ],
-            size=(height, width),
+            size=(width, height),
         )
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)

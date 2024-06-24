@@ -10,8 +10,8 @@ from zugswang.openai import generate_image
 
 data_dir = os.path.join("data")
 
-height = 1080
-width = 1920
+height = 1920
+width = 1080
 
 voice_id = "XHZMHiBtCuzEtVLE0xWF"
 scenes = []
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     background_video = moviepy.editor.VideoFileClip("data/backgrounds/videoplayback.mp4", target_resolution=(height, width), audio=False)
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
 
-    print(f"background_video dimensions: {background_video.h} {background_video.w}")
+    print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
 
     generate_video(scenes[:1], output_dir, background_video, background_audio)
     # generate_images(scenes[:1], output_dir)
