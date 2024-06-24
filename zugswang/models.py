@@ -1,6 +1,7 @@
 import copy
 from dataclasses import dataclass, field
 import hashlib
+import json
 import os
 from typing import Iterable, List, Optional, Tuple, Union
 
@@ -14,9 +15,10 @@ import moviepy.video.fx.all as vfx
 from PIL import Image
 import numpy as np
 
-from zugswang.elevenlabs import generate_audio_from_text
+from zugswang.elevenlabs import generate_audio_from_text, generate_audio_with_timestamps_from_text
 
 narrations_dir = os.path.join("data", "narrations")
+narrations_with_timestamp_dir = os.path.join("data", "narrations_with_timestamps")
 
 
 @dataclass
@@ -58,20 +60,76 @@ class Narration:
         self.text = text
         self.voice_id = voice_id
         audio_hash = hashlib.sha256(self.text.encode()).hexdigest()
-        self.audio_path = os.path.join(narrations_dir, voice_id, f"{audio_hash}.mp3")
+        self.audio_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}.mp3")
+        self.timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}.json")
+        self.processed_timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}_processed.json")
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
         print(self.audio_path)
-        if not os.path.exists(self.audio_path):
+        if not os.path.exists(self.audio_path) or not os.path.exists(self.timestamp_path):
             print("File not found")
             print("Text:")
             print(self.text)
             print("Audio Hash")
             print(audio_hash)
             print("----------------------")
-            print("Are you sure you are in the right folder?")
-            quit()
-            # generate_audio_from_text(text, self.audio_path, voice_id)
+            # print("Are you sure you are in the right folder?")
+            generate_audio_with_timestamps_from_text(text, self.audio_path, self.timestamp_path, voice_id)
+ 
+            # We need to convert these timestamps from character based to word based
+        if not os.path.exists(self.processed_timestamp_path):
+            self.process_timestamps()
+        
+        quit()
+    
+    def process_timestamps(self) -> dict[str, list[str | float]]:
+        timestamp_dict: dict = {}
+        with open(self.timestamp_path, 'r') as f:
+            data = f.read()
+            timestamp_dict = json.loads(data)
+        characters = timestamp_dict['characters']
+        start_times = timestamp_dict['character_start_times_seconds']
+        
+        words = []
+        word_start_times = []
+        current_word:str = None
+        current_word_start_time = None
+        total_characters = len(characters)
+        total_start_times = len(start_times)
+        print("total_characters, total_start_times", total_characters, total_start_times)
+        index = 0
+        
+        for char, start_time in zip(characters, start_times):
+            print(f"index {index} total-1 {total_characters - 1}")
+            if char == " " or index >= total_characters - 1:
+                if char != " ":
+                    current_word += char
+                if current_word is not None:
+                    words.append(current_word)
+                    word_start_times.append(current_word_start_time)
+                current_word = None
+                current_word_start_time = None
+            else:
+                if not current_word:
+                    current_word = char
+                    current_word_start_time = start_time
+                else:
+                    current_word += char
+            index += 1
+
+        result = {
+            "words": words,
+            "start_times": word_start_times,
+        }
+        
+        with open(self.processed_timestamp_path, 'w') as f:
+            f.write(json.dumps(result))
+        
+        return result
+                
+        
+        
+        
 
 
 @dataclass

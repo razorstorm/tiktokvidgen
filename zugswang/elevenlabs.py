@@ -1,3 +1,5 @@
+import base64
+import json
 import os
 import requests
 
@@ -45,6 +47,51 @@ def generate_audio_from_text(text: str, output_path: str, voice_id: str):
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             f.write(chunk)
     return output_path
+
+
+def generate_audio_with_timestamps_from_text(text: str, output_path: str, timestamp_path: str, voice_id: str) -> tuple[str, str]:
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps"
+    payload = {
+        "text": text,
+        "model_id": "eleven_multilingual_v2",
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.75,
+            # "style": 123,
+            "use_speaker_boost": True
+        },
+        # "pronunciation_dictionary_locators": [
+        #     {
+        #         "pronunciation_dictionary_id": "<string>",
+        #         "version_id": "<string>"
+        #     }
+        # ],
+        # "seed": 123,
+        # "previous_text": "<string>",
+        # "next_text": "<string>",
+        # "previous_request_ids": ["<string>"],
+        # "next_request_ids": ["<string>"]
+    }
+    headers = {
+        "accept": "audio/mpeg",
+        "content-type": "application/json",
+        "xi-api-key": ELEVENLABS_API_KEY,
+    }
+    response = requests.request("POST", url, json=payload, headers=headers)
+    if response.status_code != 200:
+        raise Exception(f"Request failed with status code {response.status_code} {response.content}")
+
+    json_string = response.content.decode("utf-8")
+    response_dict = json.loads(json_string)
+    audio_bytes = base64.b64decode(response_dict["audio_base64"])
+    
+    with open(output_path, 'wb') as f:
+        f.write(audio_bytes)
+        
+    with open(timestamp_path, 'w') as f:
+        f.write(json.dumps(response_dict["alignment"]))
+    
+    return output_path, timestamp_path
 
 
 if __name__ == "__main__":
