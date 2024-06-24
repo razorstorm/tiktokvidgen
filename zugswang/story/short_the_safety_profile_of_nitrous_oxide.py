@@ -179,7 +179,8 @@ if __name__ == '__main__':
     
     setup_scenes()
     output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
-    background_video = moviepy.editor.VideoFileClip("data/backgrounds/videoplayback.mp4", target_resolution=(height, width), audio=False)
+    # background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, width), audio=True)
+    background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, None), audio=True)
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
 
     print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")

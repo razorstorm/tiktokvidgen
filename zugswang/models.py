@@ -148,7 +148,7 @@ class Scene:
         image_clip = (
             moviepy.editor.ImageClip(self.media_filepath)
             .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
-            .fx(vfx.resize, width=width*0.7)
+            .fx(vfx.resize, width=width*0.85)
             .set_duration(audio_clip.duration)
         )
         title_bg_color_clip = (
@@ -164,19 +164,21 @@ class Scene:
         for word, start_time, end_time in zip(self.narration.words, self.narration.start_times, self.narration.end_times):
             caption_clip = (
                 moviepy.editor.TextClip(
-                    word, fontsize=100, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
+                    word, fontsize=150, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
                 )
                 .set_start(start_time, change_end=False)
                 .set_end(end_time)
-                .set_position(["center", 800])
+                .set_position(["center", 1450])
+                # .crossfadein(duration=0.25)
+                # .crossfadeout(duration=0.25)
             )
+            caption_clips.append(caption_clip)
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
                 title_bg_color_clip.set_position("top"),
-                title_clip.set_position(["center", 70]),
-                image_clip.set_position(["center", 250]).crossfadein(duration=1).crossfadeout(duration=1),
-                # caption_clip.set_position(["center", 800]),
+                title_clip.set_position(["center", 50]).crossfadein(duration=1).crossfadeout(duration=1),
+                image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1),
             ] + caption_clips,
             size=(width, height),
         )
