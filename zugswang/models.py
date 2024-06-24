@@ -6,7 +6,8 @@ from typing import Iterable, List, Optional, Tuple, Union
 
 import chess
 import chess.svg
-import cairosvg
+# import cairosvg
+import inspect
 import moviepy
 import moviepy.editor
 import moviepy.video.fx.all as vfx
@@ -54,14 +55,21 @@ class Narration:
     audio_path: str
 
     def __init__(self, text: str, voice_id: str="EODKX28NbkUPd7QWJ7yr"):
-        self.text = text
+        self.text = text # inspect.cleandoc(text)
         self.voice_id = voice_id
-        audio_hash = hashlib.sha256(text.encode()).hexdigest()
+        audio_hash = hashlib.sha256(self.text.encode()).hexdigest()
+        print("----------------------")
+        print(text)
+        print("===")
+        print(self.text)
+        print("----------------------")
         self.audio_path = os.path.join(narrations_dir, voice_id, f"{audio_hash}.mp3")
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
+        print(self.audio_path)
         if not os.path.exists(self.audio_path):
-            generate_audio_from_text(text, self.audio_path, voice_id)
+            print("File not found")
+            # generate_audio_from_text(text, self.audio_path, voice_id)
 
 
 @dataclass
@@ -130,30 +138,31 @@ class ChessScene:
         return svg
     
     def generate_clip(self, id, canvas, output_dir, width, pause_duration):
-        svg_path = os.path.join(output_dir, f"{id}.png")
-        svg = self.generate_svg(size=width)
-        cairosvg.svg2png(bytestring=svg, write_to=svg_path)
+        pass
+        # svg_path = os.path.join(output_dir, f"{id}.png")
+        # svg = self.generate_svg(size=width)
+        # cairosvg.svg2png(bytestring=svg, write_to=svg_path)
 
-        narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
-        pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
-        audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
-        board_clip = moviepy.editor.ImageClip(svg_path)
-        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", method="caption", size=(width, None))
-        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
-        scene_clip = moviepy.editor.CompositeVideoClip(
-            [
-                canvas,
-                board_clip.set_position((0, 64)),
-                title_clip.set_position((0, 64 + width + 64)),
-                caption_clip.set_position((0, 64 + width + 64 + title_clip.size[1] + 64)),
-            ],
-            size=canvas.size
-        )
-        scene_clip = scene_clip.set_audio(audio_clip)
-        scene_clip = scene_clip.set_duration(audio_clip.duration)
-        scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
+        # narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
+        # pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
+        # audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
+        # board_clip = moviepy.editor.ImageClip(svg_path)
+        # title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", method="caption", size=(width, None))
+        # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+        # scene_clip = moviepy.editor.CompositeVideoClip(
+        #     [
+        #         canvas,
+        #         board_clip.set_position((0, 64)),
+        #         title_clip.set_position((0, 64 + width + 64)),
+        #         caption_clip.set_position((0, 64 + width + 64 + title_clip.size[1] + 64)),
+        #     ],
+        #     size=canvas.size
+        # )
+        # scene_clip = scene_clip.set_audio(audio_clip)
+        # scene_clip = scene_clip.set_duration(audio_clip.duration)
+        # scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
 
-        return scene_clip
+        # return scene_clip
 
 
 @dataclass
