@@ -65,7 +65,6 @@ class Narration:
         self.processed_timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}_processed.json")
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
-        print(self.audio_path)
         if not os.path.exists(self.audio_path) or not os.path.exists(self.timestamp_path):
             print("File not found")
             print("Text:")
@@ -78,7 +77,14 @@ class Narration:
  
             # We need to convert these timestamps from character based to word based
         if not os.path.exists(self.processed_timestamp_path):
-            self.process_timestamps()
+            self.start_times_dict = self.process_timestamps()
+        else:
+            with open(self.processed_timestamp_path, "r") as f:
+                data = f.read()
+                self.start_times_dict = json.loads(data)
+        self.words = self.start_times_dict["words"]
+        self.start_times = self.start_times_dict["start_times"]
+        self.end_times = self.start_times_dict["end_times"]
         
         quit()
     
@@ -89,24 +95,25 @@ class Narration:
             timestamp_dict = json.loads(data)
         characters = timestamp_dict['characters']
         start_times = timestamp_dict['character_start_times_seconds']
+        end_times = timestamp_dict['character_end_times_seconds']
         
         words = []
         word_start_times = []
+        word_end_times = []
         current_word:str = None
         current_word_start_time = None
         total_characters = len(characters)
-        total_start_times = len(start_times)
-        print("total_characters, total_start_times", total_characters, total_start_times)
         index = 0
         
-        for char, start_time in zip(characters, start_times):
-            print(f"index {index} total-1 {total_characters - 1}")
+        for char, start_time, end_time in zip(characters, start_times, end_times):
             if char == " " or index >= total_characters - 1:
                 if char != " ":
                     current_word += char
                 if current_word is not None:
                     words.append(current_word)
                     word_start_times.append(current_word_start_time)
+                    word_end_times.append(end_time)
+
                 current_word = None
                 current_word_start_time = None
             else:
@@ -120,17 +127,14 @@ class Narration:
         result = {
             "words": words,
             "start_times": word_start_times,
+            "end_times": word_end_times,
         }
         
         with open(self.processed_timestamp_path, 'w') as f:
             f.write(json.dumps(result))
         
-        return result
-                
+        return result    
         
-        
-        
-
 
 @dataclass
 class Scene:
@@ -139,9 +143,6 @@ class Scene:
     media_filepath: str
 
     def generate_clip(self, id, output_dir, width: int, height: int, pause_duration: float=0.25):
-
-        print(f"generate_clip {width}x{height}")
-
         narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
         pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
         audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
@@ -159,7 +160,10 @@ class Scene:
             moviepy.editor.TextClip(self.name, fontsize=60, font="Bebas Neue Pro", color="white", bg_color="rgba(0,0,0,0)", method="caption", size=(width, None))
             .set_duration(audio_clip.duration)
         )
-        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
+        # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
+        caption_clips = []
+        for word, start_time in zip(self.narration.words, self.narration.start_times):
+            caption_clip = moviepy.editor.TextClip(word, fontsize=100, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)).set_start(start_time)
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
