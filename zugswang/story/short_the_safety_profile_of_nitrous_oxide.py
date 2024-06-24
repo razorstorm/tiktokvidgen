@@ -164,6 +164,10 @@ if __name__ == '__main__':
     import moviepy
     import moviepy.editor
     
+    # print(moviepy.editor.TextClip.list('font'))
+    
+    # quit()
+    
     setup_scenes()
     output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
     background_video = moviepy.editor.VideoFileClip("data/backgrounds/videoplayback.mp4", target_resolution=(height, width), audio=False)

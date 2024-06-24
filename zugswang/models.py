@@ -69,7 +69,9 @@ class Narration:
             print("Audio Hash")
             print(audio_hash)
             print("----------------------")
-            generate_audio_from_text(text, self.audio_path, voice_id)
+            print("Are you sure you are in the right folder?")
+            quit()
+            # generate_audio_from_text(text, self.audio_path, voice_id)
 
 
 @dataclass
@@ -88,7 +90,7 @@ class Scene:
 
         image_clip = (moviepy.editor.ImageClip(self.media_filepath)
                         .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
-                        .fx(vfx.resize, width=width*0.8)
+                        .fx(vfx.resize, width=width*0.7)
                         .set_duration(audio_clip.duration)
         )
         title_bg_color_clip = (
@@ -96,10 +98,10 @@ class Scene:
             .set_duration(audio_clip.duration)
         )
         title_clip = (
-            moviepy.editor.TextClip(self.name, fontsize=54, color="white", bg_color="rgba(0,0,0,0)", method="caption", size=(width, None))
+            moviepy.editor.TextClip(self.name, fontsize=60, font="Bebas Neue Pro", color="white", bg_color="rgba(0,0,0,0)", method="caption", size=(width, None))
             .set_duration(audio_clip.duration)
         )
-        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
+        caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, color="white", method="caption", size=(width*0.8, None))
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
