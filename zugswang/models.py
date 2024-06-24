@@ -55,21 +55,21 @@ class Narration:
     audio_path: str
 
     def __init__(self, text: str, voice_id: str="EODKX28NbkUPd7QWJ7yr"):
-        self.text = text # inspect.cleandoc(text)
+        self.text = text
         self.voice_id = voice_id
         audio_hash = hashlib.sha256(self.text.encode()).hexdigest()
-        print("----------------------")
-        print(text)
-        print("===")
-        print(self.text)
-        print("----------------------")
         self.audio_path = os.path.join(narrations_dir, voice_id, f"{audio_hash}.mp3")
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
         print(self.audio_path)
         if not os.path.exists(self.audio_path):
             print("File not found")
-            # generate_audio_from_text(text, self.audio_path, voice_id)
+            print("Text:")
+            print(self.text)
+            print("Audio Hash")
+            print(audio_hash)
+            print("----------------------")
+            generate_audio_from_text(text, self.audio_path, voice_id)
 
 
 @dataclass
@@ -79,6 +79,9 @@ class Scene:
     media_filepath: str
 
     def generate_clip(self, id, output_dir, height: int, width: int, pause_duration: float=0.25):
+
+        print(f"generate_clip {height}x{width}")
+        
         narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
         pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
         audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
@@ -88,13 +91,13 @@ class Scene:
                         # .fx(vfx.resize, newsize=(height, width))
                         .fx(vfx.crop, width=width, height=height)
                         .fx(vfx.margin, mar=32, opacity=0))
-        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", bg_color="black", method="caption", size=(width, None))
+        title_clip = moviepy.editor.TextClip(self.name, fontsize=54, color="white", bg_color="rgba(255,0,0,0.5)", method="caption", size=(width, None))
         # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=36, color="white", method="caption", size=(width, None))
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
-                image_clip.set_position("center", "center"),
                 title_clip.set_position("top", "center"),
+                image_clip.set_position("center", "center"),
                 # caption_clip.set_position("center", "center"),
             ],
             size=(height, width),

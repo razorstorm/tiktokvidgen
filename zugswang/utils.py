@@ -33,6 +33,8 @@ def generate_video(
     ):
     os.makedirs(output_dir, exist_ok=True)
 
+    print(f"generate_video {background_video.h}X{background_video.w}")
+
     clips = []
     for i, scene in enumerate(scenes):
         clip = scene.generate_clip(i, output_dir, background_video.h, background_video.w, pause_duration)

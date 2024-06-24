@@ -10,8 +10,8 @@ from zugswang.openai import generate_image
 
 data_dir = os.path.join("data")
 
-width = 1080
-height = 1920
+height = 1080
+width = 1920
 
 voice_id = "XHZMHiBtCuzEtVLE0xWF"
 scenes = []
@@ -19,7 +19,6 @@ scenes = []
 
 def get_narration(text: str):
     text = inspect.cleandoc(text)
-    # text = textwrap.dedent(text)
     return Narration(text, voice_id=voice_id)
 
 
@@ -36,12 +35,12 @@ def generate_images(scenes: List[Scene], output_dir: str):
         Generate a simple image that will help illustrate the following text:
     """
     prompt = prompt.rstrip().lstrip()
-    prompt = textwrap.dedent(prompt)
+    prompt = inspect.cleandoc(prompt)
 
     os.makedirs(output_dir, exist_ok=True)
     for i, scene in enumerate(scenes):
         text = scene.narration.text.rstrip().lstrip()
-        text = textwrap.dedent(text)
+        text = inspect.cleandoc(text)
         image_url = generate_image(prompt=prompt, text=text)
         if not image_url:
             continue
@@ -167,8 +166,10 @@ if __name__ == '__main__':
     
     setup_scenes()
     output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
-    background_video = moviepy.editor.VideoFileClip("data/backgrounds/euphoria-inspired-mood-lights.mp4", target_resolution=(height, width), audio=False)
+    background_video = moviepy.editor.VideoFileClip("data/backgrounds/videoplayback.mp4", target_resolution=(height, width), audio=False)
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
+
+    print(f"background_video dimensions: {background_video.h} {background_video.w}")
 
     generate_video(scenes[:1], output_dir, background_video, background_audio)
     # generate_images(scenes[:1], output_dir)
