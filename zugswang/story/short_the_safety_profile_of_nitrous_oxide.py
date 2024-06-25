@@ -196,19 +196,14 @@ if __name__ == '__main__':
     from zugswang.utils import generate_video
     import moviepy
     import moviepy.editor
-    
-    # print(moviepy.editor.TextClip.list('font'))
-    
-    # quit()
+
     article_dir = "ea3167"
     # setup_scenes()
-    setup_scenes_from_file(os.path.join("story", "ea3167.json"))
+    setup_scenes_from_file(os.path.join("story", f"{article_dir}.json"))
     # output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
     output_dir = os.path.join("data", "story", article_dir)
-    # background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, width), audio=True)
     background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, None), audio=True)
     bg_width, bg_height = background_video.size
-    # background_video = vfx.crop(background_video, width=width, height=height, x_center=bg_width/2, y_center=bg_height/2)
     background_video = (
         background_video
         .fx(vfx.crop, width=width, height=height, x_center=bg_width/2, y_center=bg_height/2)
@@ -219,6 +214,4 @@ if __name__ == '__main__':
 
     print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
 
-    # generate_video(scenes[:1], output_dir, background_video, background_audio)
     generate_video(scenes, output_dir, background_video, background_audio)
-    # generate_images(scenes[:1], output_dir)
