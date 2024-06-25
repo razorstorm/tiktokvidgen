@@ -34,8 +34,11 @@ def get_narration(text: str):
     return Narration(text, voice_id=voice_id)
 
 
-def add_scene(name: str, narration: str, media_filepath: str, screen_caption: str = None, duration: int = None) -> Scene:
-    scene = Scene(name=name, narration=get_narration(narration), media_filepath=media_filepath, screen_caption=screen_caption, duration=duration)
+def add_scene(name: str, narration: str, media_filepath: str, caption: str = None, duration: int = None) -> Scene:
+    narration = None
+    if not caption:
+        narration = get_narration(narration)
+    scene = Scene(name=name, narration=narration, media_filepath=media_filepath, caption=caption, duration=duration)
     scenes.append(scene)
     return scene
 
@@ -72,7 +75,9 @@ def setup_scenes_from_file(filename: str) -> None:
         add_scene(
             name=scene_data["name"],
             narration=scene_data["narration"],
-            media_filepath=scene_data["media_filepath"]
+            media_filepath=scene_data["media_filepath"],
+            caption=scene_data.get("caption", None),
+            duration=scene_data.get("duration", None),
         )
 
 def setup_scenes() -> None:
@@ -175,13 +180,16 @@ def setup_scenes() -> None:
     )
 
     # TODO: do not read them, but include it visually
-    # add_scene(
-    #     name="Citations",
-    #     narration="""
-    #         https://pubmed.ncbi.nlm.nih.gov/26496821/ 
-    #         https://pubmed.ncbi.nlm.nih.gov/34427020/ ("The average age was 24 years, and mean canister consumption was 148 per day for 9 months." That's a far cry from responsible casual usage) 
-    #     """,
-    # )
+    add_scene(
+        name="Citations",
+        narration="",
+        caption="""
+            https://pubmed.ncbi.nlm.nih.gov/26496821/ 
+            https://pubmed.ncbi.nlm.nih.gov/34427020/ ("The average age was 24 years, and mean canister consumption was 148 per day for 9 months." That's a far cry from responsible casual usage) 
+        """,
+        media_filepath=None,
+        duration=5,
+    )
 
 
 if __name__ == '__main__':

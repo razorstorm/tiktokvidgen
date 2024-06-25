@@ -175,12 +175,14 @@ class Scene:
     def generate_clip(self, id, output_dir, width: int, height: int, pause_duration: float=0.25):
         audio_clip = self.generate_audio_clip(pause_duration)
 
-        image_clip = (
-            moviepy.editor.ImageClip(self.media_filepath)
-            .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
-            .fx(vfx.resize, width=width*0.85)
-            .set_duration(audio_clip.duration)
-        )
+        image_clip = None
+        if self.media_filepath:
+            image_clip = (
+                moviepy.editor.ImageClip(self.media_filepath)
+                .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
+                .fx(vfx.resize, width=width*0.85)
+                .set_duration(audio_clip.duration)
+            )
         title_bg_color_clip = (
             moviepy.editor.ColorClip(size=(width, 180), color=[0,0,0,127.5])
             .set_duration(audio_clip.duration)
@@ -196,7 +198,7 @@ class Scene:
             [
                 title_bg_color_clip.set_position("top"),
                 title_clip.set_position(["center", 50]).crossfadein(duration=1).crossfadeout(duration=1),
-                image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1),
+                image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1) if image_clip else None,
             ] + caption_clips,
             size=(width, height),
         )

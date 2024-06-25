@@ -1,6 +1,8 @@
 
 env/
 venv/
+zugswang/story/short_the_safety_profile_of_nitrous_oxide/
+
 __pycache__/
 
 .DS_Store
