@@ -55,14 +55,15 @@ class Narration:
     text: str
     voice_id: str
     audio_path: str
+    audio_hash: str
 
     def __init__(self, text: str, voice_id: str="EODKX28NbkUPd7QWJ7yr"):
         self.text = text
         self.voice_id = voice_id
-        audio_hash = hashlib.sha256(self.text.encode()).hexdigest()
-        self.audio_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}.mp3")
-        self.timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}.json")
-        self.processed_timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{audio_hash}_processed.json")
+        self.audio_hash = hashlib.sha256(self.text.encode()).hexdigest()
+        self.audio_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{self.audio_hash}.mp3")
+        self.timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{self.audio_hash}.json")
+        self.processed_timestamp_path = os.path.join(narrations_with_timestamp_dir, voice_id, f"{self.audio_hash}_processed.json")
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
         if not os.path.exists(self.audio_path) or not os.path.exists(self.timestamp_path):
@@ -70,7 +71,7 @@ class Narration:
             print("Text:")
             print(self.text)
             print("Audio Hash")
-            print(audio_hash)
+            print(self.audio_hash)
             print("----------------------")
             # print("Are you sure you are in the right folder?")
             generate_audio_with_timestamps_from_text(text, self.audio_path, self.timestamp_path, voice_id)
@@ -159,7 +160,8 @@ class Scene:
                 caption_clips.append(caption_clip)
             return caption_clips
         else:
-            caption_clip = moviepy.editor.TextClip(self.caption, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
+            caption_clip = moviepy.editor.TextClip(self.caption, fontsize=35, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)).set_position(["center", 500])
+            return [caption_clip]
     
     def generate_audio_clip(self, pause_duration):
         if not self.caption:
@@ -171,12 +173,24 @@ class Scene:
         else:
             pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=self.duration)
             return pause_clip
+    
+    @property
+    def unique_key(self):
+        if self.narration:
+            return self.narration.audio_hash
+        else:
+            return hashlib.sha256(self.caption.encode()).hexdigest()
         
     def generate_clip(self, id, output_dir, width: int, height: int, pause_duration: float=0.25):
+        # if file already exists just load it
+        file_path = os.path.join(output_dir, f"{id}_{self.unique_key}.mp4")
+        if os.path.exists(file_path):
+            return moviepy.editor.VideoFileClip(file_path, audio=True)
+        
         audio_clip = self.generate_audio_clip(pause_duration)
 
         image_clip = None
-        if self.media_filepath:
+        if self.media_filepath is not None:
             image_clip = (
                 moviepy.editor.ImageClip(self.media_filepath)
                 .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
@@ -194,17 +208,20 @@ class Scene:
         # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
         caption_clips = self.generate_caption_clips(width)
         
+        image_clips = []
+        if image_clip:
+            image_clips.append(image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1))
+        
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
                 title_bg_color_clip.set_position("top"),
                 title_clip.set_position(["center", 50]).crossfadein(duration=1).crossfadeout(duration=1),
-                image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1) if image_clip else None,
-            ] + caption_clips,
+            ] + image_clips + caption_clips,
             size=(width, height),
         )
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
-        scene_clip.write_videofile(os.path.join(output_dir, f"{id}.mp4"), fps=24)
+        scene_clip.write_videofile(file_path, fps=24)
 
         return scene_clip
 
