@@ -139,11 +139,41 @@ class Scene:
     name: str
     narration: Narration
     media_filepath: str
-
+    duration: float 
+    caption: str
+    
+    def generate_caption_clips(self, width):
+        if not self.caption:
+            caption_clips = []
+            for word, start_time, end_time in zip(self.narration.words, self.narration.start_times, self.narration.end_times):
+                caption_clip = (
+                    moviepy.editor.TextClip(
+                        word, fontsize=150, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
+                    )
+                    .set_start(start_time, change_end=False)
+                    .set_end(end_time)
+                    .set_position(["center", 1450])
+                    # .crossfadein(duration=0.25)
+                    # .crossfadeout(duration=0.25)
+                )
+                caption_clips.append(caption_clip)
+            return caption_clips
+        else:
+            caption_clip = moviepy.editor.TextClip(self.caption, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
+    
+    def generate_audio_clip(self, pause_duration):
+        if not self.caption:
+            narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
+            pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
+            audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
+            
+            return audio_clip
+        else:
+            pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=self.duration)
+            return pause_clip
+        
     def generate_clip(self, id, output_dir, width: int, height: int, pause_duration: float=0.25):
-        narration_clip = moviepy.editor.AudioFileClip(self.narration.audio_path)
-        pause_clip = moviepy.editor.AudioClip(lambda t: 0, duration=pause_duration)
-        audio_clip = moviepy.editor.concatenate_audioclips([narration_clip, pause_clip])
+        audio_clip = self.generate_audio_clip(pause_duration)
 
         image_clip = (
             moviepy.editor.ImageClip(self.media_filepath)
@@ -160,19 +190,7 @@ class Scene:
             .set_duration(audio_clip.duration)
         )
         # caption_clip = moviepy.editor.TextClip(self.narration.text, fontsize=65, align="West", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None))
-        caption_clips = []
-        for word, start_time, end_time in zip(self.narration.words, self.narration.start_times, self.narration.end_times):
-            caption_clip = (
-                moviepy.editor.TextClip(
-                    word, fontsize=150, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
-                )
-                .set_start(start_time, change_end=False)
-                .set_end(end_time)
-                .set_position(["center", 1450])
-                # .crossfadein(duration=0.25)
-                # .crossfadeout(duration=0.25)
-            )
-            caption_clips.append(caption_clip)
+        caption_clips = self.generate_caption_clips(width)
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [

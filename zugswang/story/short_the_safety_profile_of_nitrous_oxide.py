@@ -34,8 +34,8 @@ def get_narration(text: str):
     return Narration(text, voice_id=voice_id)
 
 
-def add_scene(name: str, narration: str, media_filepath: str) -> Scene:
-    scene = Scene(name=name, narration=get_narration(narration), media_filepath=media_filepath)
+def add_scene(name: str, narration: str, media_filepath: str, screen_caption: str = None, duration: int = None) -> Scene:
+    scene = Scene(name=name, narration=get_narration(narration), media_filepath=media_filepath, screen_caption=screen_caption, duration=duration)
     scenes.append(scene)
     return scene
 
