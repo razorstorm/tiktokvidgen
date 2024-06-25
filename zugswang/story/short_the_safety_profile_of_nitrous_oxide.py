@@ -75,7 +75,7 @@ def setup_scenes_from_file(filename: str) -> None:
         add_scene(
             name=scene_data["name"],
             narration=scene_data["narration"],
-            media_filepath=scene_data["media_filepath"],
+            media_filepath=scene_data.get("media_filepath", None),
             caption=scene_data.get("caption", None),
             duration=scene_data.get("duration", None),
         )
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     # quit()
     article_dir = "ea3167"
     # setup_scenes()
-    setup_scenes_from_file(os.path.join("data", "story", "ea3167.json"))
+    setup_scenes_from_file(os.path.join("story", "ea3167.json"))
     # output_dir = os.path.join("data", "story", __file__.split("/")[-1].replace(".py", ""))
     output_dir = os.path.join("data", "story", article_dir)
     # background_video = moviepy.editor.VideoFileClip("data/backgrounds/8l4xqr.mp4", target_resolution=(height, width), audio=True)

@@ -190,6 +190,7 @@ class Scene:
         audio_clip = self.generate_audio_clip(pause_duration)
 
         image_clip = None
+        print("Getting image:", self.media_filepath)
         if self.media_filepath is not None:
             image_clip = (
                 moviepy.editor.ImageClip(self.media_filepath)
