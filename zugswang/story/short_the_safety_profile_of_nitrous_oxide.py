@@ -1,3 +1,4 @@
+import json
 import os
 import inspect
 from typing import List
@@ -60,6 +61,19 @@ def generate_images(scenes: List[Scene], output_dir: str):
         with open(os.path.join(output_dir, f"{i}.png"), "wb") as f:
             f.write(image)
 
+
+def setup_scenes_from_file(filename: str) -> None:
+    scenes_dict = {}
+    with open(filename, "r") as f:
+        data = f.read()
+        scenes_dict = json.loads(data)
+    
+    for scene_data in scenes_dict["scenes"]:
+        add_scene(
+            name=scene_data["name"],
+            narration=scene_data["narration"],
+            media_filepath=scene_data["media_filepath"]
+        )
 
 def setup_scenes() -> None:
     add_scene(
@@ -188,11 +202,13 @@ if __name__ == '__main__':
     background_video = (
         background_video
         .fx(vfx.crop, width=width, height=height, x_center=bg_width/2, y_center=bg_height/2)
-        .fx(volumex, 0.5)
+        .fx(volumex, 0.1)
+        .fx(vfx.loop)
     )
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
 
     print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
 
-    generate_video(scenes[:1], output_dir, background_video, background_audio)
+    # generate_video(scenes[:1], output_dir, background_video, background_audio)
+    generate_video(scenes, output_dir, background_video, background_audio)
     # generate_images(scenes[:1], output_dir)
