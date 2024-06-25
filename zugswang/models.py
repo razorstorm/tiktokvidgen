@@ -160,7 +160,7 @@ class Scene:
                 caption_clips.append(caption_clip)
             return caption_clips
         else:
-            caption_clip = moviepy.editor.TextClip(self.caption, fontsize=35, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)).set_position(["center", 500])
+            caption_clip = moviepy.editor.TextClip(self.caption, fontsize=35, align="Center", font="Bebas Neue Pro", color="white", bg_color="rgba(0,0,0,0.5)", method="caption", size=(width*0.8, None)).set_position(["center", 500])
             return [caption_clip]
     
     def generate_audio_clip(self, pause_duration):
@@ -185,7 +185,7 @@ class Scene:
         # if file already exists just load it
         file_path = os.path.join(output_dir, f"{id}_{self.unique_key}.mp4")
         if os.path.exists(file_path):
-            return moviepy.editor.VideoFileClip(file_path, audio=True)
+            return moviepy.editor.VideoFileClip(file_path, target_resolution=(height, width), audio=True)
         
         audio_clip = self.generate_audio_clip(pause_duration)
 
