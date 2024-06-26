@@ -13,8 +13,13 @@ from moviepy.audio.fx.volumex import volumex
 
 data_dir = os.path.join("data")
 
+# Vertical 1080
 height = 1920
 width = 1080
+
+# 4K
+# height = 2160
+# width = 3840
 
 voice_id = "XHZMHiBtCuzEtVLE0xWF"
 scenes = []
