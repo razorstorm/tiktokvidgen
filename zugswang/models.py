@@ -16,6 +16,7 @@ from PIL import Image
 import numpy as np
 
 from zugswang.elevenlabs import generate_audio_from_text, generate_audio_with_timestamps_from_text
+from moviepy.video.io.ffmpeg_tools import ffmpeg_merge_video_audio
 
 narrations_dir = os.path.join("data", "narrations")
 narrations_with_timestamp_dir = os.path.join("data", "narrations_with_timestamps")
@@ -193,16 +194,7 @@ class Scene:
         )
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
-        scene_clip.write_videofile(file_path, fps=24)
+        print(f"Finished constructing scene: {id}_{self.unique_key}")
+        # scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
 
         return scene_clip
-
-
-@dataclass
-class Quiz:
-    pass
-
-
-@dataclass
-class Walkthrough:
-    pass
