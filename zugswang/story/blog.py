@@ -202,7 +202,7 @@ if __name__ == '__main__':
     import moviepy
     import moviepy.editor
 
-    article_dir = "neurons"
+    article_dir = "test"
     # setup_scenes()
     setup_scenes_from_file(os.path.join("story", f"{article_dir}.json"))
     output_dir = os.path.join("data", "story", article_dir)

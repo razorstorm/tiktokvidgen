@@ -121,13 +121,20 @@ class Scene:
             for word, start_time, end_time in zip(self.narration.words, self.narration.start_times, self.narration.end_times):
                 caption_clip = (
                     moviepy.editor.TextClip(
-                        word, fontsize=150, align="Center", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
+                        word, fontsize=150, align="North", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None), stroke_color="black", stroke_width=10
                     )
                     .set_start(start_time, change_end=False)
                     .set_end(end_time)
                     .set_position(["center", 1450])
-                    # .crossfadein(duration=0.25)
-                    # .crossfadeout(duration=0.25)
+                )
+                caption_clips.append(caption_clip)
+                caption_clip = (
+                    moviepy.editor.TextClip(
+                        word, fontsize=150, align="North", font="Bebas Neue Pro", color="white", method="caption", size=(width*0.8, None)
+                    )
+                    .set_start(start_time, change_end=False)
+                    .set_end(end_time)
+                    .set_position(["center", 1450])
                 )
                 caption_clips.append(caption_clip)
             return caption_clips
@@ -195,6 +202,6 @@ class Scene:
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
         print(f"Finished constructing scene: {id}_{self.unique_key}")
-        # scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
+        scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
 
         return scene_clip
