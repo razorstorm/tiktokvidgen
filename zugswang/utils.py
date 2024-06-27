@@ -45,7 +45,8 @@ def generate_video(
     final_audio = moviepy.editor.CompositeAudioClip([background_music.set_duration(narration_audio.duration), narration_audio])
     
     video = moviepy.editor.concatenate_videoclips(clips)
+    # video.write_videofile(os.path.join(output_dir, "pre_final.mp4"), fps=24, threads=32, verbose=False)
     video = moviepy.editor.CompositeVideoClip([background_video.set_duration(video.duration), video], size=(background_video.w, background_video.h))
     # final_video = video.set_audio(final_audio)
     final_video = video
-    final_video.write_videofile(os.path.join(output_dir, "final.mp4"), fps=24, threads=32, verbose=False)
+    final_video.write_videofile(os.path.join(output_dir, "final.mp4"), fps=24, threads=32, verbose=False, codec="h264_nvenc")

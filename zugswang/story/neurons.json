@@ -1,0 +1,74 @@
+{
+  "scenes": [
+    {
+      "name": "What Does a Neuron Actually Do?!",
+      "narration": "In numerous previous articles, we discussed ligands binding to receptors and influencing a neuron's activity. Today let's delve into how a neuron actually functions and look through an example of a standard activation of a neuron.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/1709161864104-S3UV03G0UP0PJN4GJF3R/file-j5xUc9tib0Fc3VSKARBvLh2R.png"
+    },
+    {
+      "name": "Intro",
+      "narration": "The most basic operation of a neuron is to transmit electrochemical signals downstream to other neurons it is connected to. This is known as firing an Action Potential. Each neuron is connected to a large number of upstream and downstream neurons. It receives signals from previous neurons, and if certain conditions are met, it will fire its own action potential down to all its downstream neurons. This 'decision' on whether and when to fire an action potential relies on numerous factors, including all the receptor neurochemistry we've discussed in the past. The overall pattern of neuronal activity creates the emergent complexity of our thoughts, behaviors, and consciousness. So let's talk about how an action potential actually happens!",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/db287193-376d-4b06-92b1-8e5685592bad/1206_The_Neuron.jpg"
+    },
+    {
+      "name": "Journey of a Neuron Firing an Action Potential: Synaptic Signals",
+      "narration": "Synaptic Signals: As discussed previously, the connection between two neurons is known as a synapse, and this is where the presynaptic (upstream) neuron transmits signals to the postsynaptic (downstream) neuron via chemical signals known as neurotransmitters. Most articles of this blog so far have explored how different neurotransmitters and drugs can impact the signals being received.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/88ada83e-21de-4f4b-bd22-262fb7f21d51/synapse.png"
+    },
+    {
+      "name": "Presynaptic Excitatory Signals",
+      "narration": "In order for a cell to fire an action potential, it needs to receive excitatory signals from the presynaptic neurons. There are numerous excitatory neurotransmitters and their associated receptors, but Glutamate binding to the AMPA receptor is the primary excitatory system for handling fast acting signal propagation. To explain how glutamate induces an action potential, we must first look at what an action potential is.", 
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/ca7d4605-c345-49ef-8ae8-a58f7bac2ca9/L-glutamic-acid-skeletal.png"
+    },
+    {
+      "name": "Neuronal Polarization",
+      "narration": "A neuron is usually in a polarized state, where the overall charge within the neuron is more negative than the charge of the surrounding environment. An action potential occurs during a 'depolarization' event, where ion flow has caused the neuron to become more positively charged internally. This change in charge propagates down the neuron and causes several changes to occur, eventually leading to firing a signal to the downstream neuron.", 
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/6d594667-295e-4d2e-8f94-0556c647ba2d/1221_Action_Potential.jpg"
+    },
+    {
+      "name": "Glutamate and AMPA",
+      "narration": "The AMPA receptor is a highly distributed receptor that is present widely throughout the body. Glutamate is the neurotransmitter that targets the AMPA receptor (amongst other receptors). The AMPA receptor is an ligand-gated ion channel (aka ionotropic receptor), this means that once glutamate binds to the receptor, the receptor opens a channel to allow ions to flow into the neuron. An activated AMPA receptor is primarily permeable to positively charged Sodium cations. Once glutamate has opened the AMPA channel, numerous Sodium cations enter the cell, causing the local region to become more positively charged. ",
+      "media_filepath": "https://upload.wikimedia.org/wikipedia/commons/0/03/RegulationOfAMPARTrafficking.jpg"
+    },
+    {
+      "name": "Dendrite Terminals",
+      "narration": "Dendrites are long 'arms' that reach out from the neuron body, with a dendrite terminal at its end which forms a synapse with an upstream neuron. AMPA receptors are mostly located at the dendrite terminal, waiting to receive glutamate released from the presynaptic neuron. Once glutamate has activated these AMPA receptors and induced Sodium ions to flow into the neuron, the localized region of that particular dendrite becomes depolarized.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/3365ee1a-ea2d-4346-ad9a-ec9aa88fe34e/synapse2.png"
+    },
+    {
+      "name": "Voltage Gated Sodium Channels",
+      "narration": "Numerous Voltage Gated Sodium Channels (VGSC) are located along the entire body of the neuron, from the tips of the dendrites through the cell body (soma) all the way down to the tips of the axons. These VGSCs are typically closed off and inactive, but open up when a certain voltage threshold is reached. A localized depolarization event can cause a sufficient voltage change to open up these channels. Once these channels are open, they are also selectively permeable to positively charged Sodium ions. This causes the region localized around this VGSC to also depolarize. This then causes a chain reaction, as the neighboring VGSCs also begin letting in Sodium ions, causing more depolarization. This wave of depolarization -> VGSC activation -> sodium ion inflow -> depolarization continues to propagate down the entire dendrite all the way to the cell body. Through this, the neuron's dendrite utilizes chemical and electrical messengers to transmit a signal to the cell body.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/f69cd79b-ac46-4a70-b1e3-314883ceb8ca/Sodium-channel.svg.png"
+    },
+    {
+      "name": "Depolarization Propagation",
+      "narration": "A neuron typically comes with a large number of dendrites connecting to a large number of presynaptic neurons. Frequently a wave of depolarization from a single dendrite might not be necessarily enough to induce the entire cell to depolarize. If too few dendrites have depolarized, this wave might simply fizzle out eventually, not leading to an action potential. (These failed signals can lead to the neurons treating it as a mistake and slowly weakening that specific synaptic connection or pruning it completely in a process also controlled by Glutamate but on the NMDA receptor instead. But this is out of scope for this article). Instead, if enough dendrites have received excitatory signals, the resulting wave of depolarization could potentially induce enough of a voltage change in the cell body that VGSCs can continue propagating the signal forward, firing an action potential",
+      "media_filepath": "https://upload.wikimedia.org/wikipedia/commons/a/a2/1224_Post_Synaptic_Potential_Summation.jpg"
+    },
+    {
+      "name": "Continued Propagation Down Axons",
+      "narration": "Dendrites are the input arms of a neuron, while Axons are the output arms. Each neuron is equipped with a single axon that then splits up into numerous axon terminals, each potentially connecting to different neuron. Once the neuron has depolarized, VGSCs on the axons continue to let in Sodium ions one at a time and propagating the depolarization all the way down to the axon terminals.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/55d8fb5b-6a92-46e7-b612-07e5c333ced9/neuron.png"
+    },
+    {
+      "name": "Axon Terminals and Voltage Gated Calcium Channels",
+      "narration": "Once the depolarization have reached the axon terminals, the voltage change now triggers a different type of voltage gated channel known as the Voltage Gated Calcium Channels (VGCC). These work very similarly to VGSCs, but are selectively permeable to positively charged Calcium cations instead of Sodium. While positively charged calcium cations can also serve to depolarize the neuron, they also have numerous roles within the neuron as a secondary messenger, triggering a variety of cellular processes. Here, the VGCC is used to signal the release of neurotransmitters. Once the calcium cations enter the axon terminal, they bind to terminal vesicles which store excess neurotransmitters. The calcium ions induces these vesicles to release their stored neurotransmitters into the neuron, where they are eventually transported out of the axon terminal into the synapse. Here, these released neurotransmitters bind to the receptors on the dendrite terminal of the next cell, starting the process over again, propagating the signal downwards.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/51ce1b77-4e14-40e7-8497-4bddc2e6da01/Capture.PNG"
+    },
+    {
+      "name": "Repolarization and Voltage Gated Potassium Channels",
+      "narration": "After all this occurs, the cell needs to go back to a polarized state to be ready for the next action potential. It achieves this by using a third type of voltage gated channels known as Voltage Gated Potassium Channels (VGPC or VGKC). These channels are located all throughout the cell and open up to allow positively charged Potassium cations to exit the cell, there by making the internal charge more negative again in an event known as 'repolarization'. After all this, there are sodium and potassium pumps that use ATP (cellular energy) to exchange sodium ions for potassium ions in order to replenish its internal store of potassium and deplete its internal store of sodium. These two processes reset the cell back to the state it was in prior to this action potential. The first step helps to rebalance the electrical charge while the second step helps to rebalance the concentrations of important ion messengers.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/6d594667-295e-4d2e-8f94-0556c647ba2d/1221_Action_Potential.jpg"
+    },
+    {
+      "name": "Inhibitory Signals and Hyperpolarization",
+      "narration": "Opposing the excitatory signals are the inhibitory neurotransmitter/receptor systems. Chief among these is the GABA neurotransmitter and the GABA A receptor. GABA A is also a ligand gated ion channel (ionotropic receptor). However, once GABA binds to the receptor, instead of letting in positively charged ions, it lets in negatively charged Chloride anions. This influx of negatively charged ions makes the neuron become even more negatively charged than usual leading to an event known as 'Hyperpolarization'. A hyperpolarized neuron requires far more positively charged cations than usual to induce a depolarization, thus hyperpolarization serves as an inhibitory signal for a cell. This acts as a 'brake pedal' for the neuron, slowing down neurotransmission. A careful balance between excitatory and inhibitory signals is constantly maintained to enable healthy brain function.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/1e161a46-341c-4f0d-b66d-6aab7d228de7/gaba.png"
+    },
+    {
+      "name": "Other Factors",
+      "narration": "We only discussed the simplest and most prevalent excitatory and inhibitory systems in the brain. While these are the most prevalant signaling systems, it does not tell the complete picture. We have dozens of different neurotransmitters and receptor systems that all impart a variety of complex effects. Many of these other systems also cause excitatory or inhibitory signals, contributing to the overall 'decision' to fire an action potential. Other receptor systems are more complicated than signaling a simple go vs stop and can induce a variety of complicated intraneuronal processes through secondary messengers. G-Protein Coupled Receptors and ion-gated Calcium channel receptors all tend to create a variety of complex intracellular effects that cannot be neatly categorized into simply an excitatory or inhibitory message. This process is highly complicated and I know I've said many times now that we'll save it for a future article. Unfortunately that future is not here yet, but I promise one of these days I'll explain how GPCRs work.",
+      "media_filepath": "https://images.squarespace-cdn.com/content/v1/64b1beb639c2942d73a49116/8fc533a1-63de-4a6b-aa1e-401accb65d01/5ht2a.jpg"
+    }
+  ]
+}
