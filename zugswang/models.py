@@ -202,6 +202,6 @@ class Scene:
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
         print(f"Finished constructing scene: {id}_{self.unique_key}")
-        scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
+        # scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
 
         return scene_clip

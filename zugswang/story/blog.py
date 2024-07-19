@@ -14,12 +14,12 @@ from moviepy.audio.fx.volumex import volumex
 data_dir = os.path.join("data")
 
 # Vertical 1080
-height = 1920
-width = 1080
+# height = 1920
+# width = 1080
 
 # 4K
-# height = 2160
-# width = 3840
+height = 2160
+width = 3840
 
 voice_id = "XHZMHiBtCuzEtVLE0xWF"
 scenes = []
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     import moviepy
     import moviepy.editor
 
-    article_dir = "test"
+    article_dir = "neurons"
     # setup_scenes()
     setup_scenes_from_file(os.path.join("story", f"{article_dir}.json"))
     output_dir = os.path.join("data", "story", article_dir)
