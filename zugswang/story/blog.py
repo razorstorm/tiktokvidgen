@@ -212,8 +212,10 @@ if __name__ == '__main__':
         .fx(volumex, 0.1)
         .fx(vfx.loop)
     )
+    
+    
     background_audio = moviepy.editor.AudioClip(lambda t: 0, duration=1)
 
-    print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
+    # print(f"background_video dimensions: {width}x{height} {background_video.w} {background_video.h}")
 
     generate_video(scenes, output_dir, background_video, background_audio)

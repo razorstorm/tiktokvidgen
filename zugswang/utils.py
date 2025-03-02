@@ -1,15 +1,11 @@
+import os
 from typing import List
 
 import chess
 import chess.svg
-
-import os
-from typing import List
-
 import moviepy
 import moviepy.editor
 from moviepy.audio.fx.volumex import volumex
-
 from zugswang.models import Scene
 
 
@@ -32,9 +28,9 @@ def generate_video(
         pause_duration: float=0.25,
     ):
     os.makedirs(output_dir, exist_ok=True)
-
+    
     print(f"generate_video {background_video.w}X{background_video.h}")
-
+    
     clips = []
     for i, scene in enumerate(scenes):
         clip = scene.generate_clip(i, output_dir, background_video.w, background_video.h, pause_duration)

@@ -1,26 +1,32 @@
 import copy
-from dataclasses import dataclass, field
 import hashlib
+# import cairosvg
+import inspect
 import json
 import os
+from dataclasses import dataclass, field
 from typing import Iterable, List, Optional, Tuple, Union
 
 import chess
 import chess.svg
-# import cairosvg
-import inspect
 import moviepy
 import moviepy.editor
 import moviepy.video.fx.all as vfx
-from PIL import Image
 import numpy as np
-
-from zugswang.elevenlabs import generate_audio_from_text, generate_audio_with_timestamps_from_text
 from moviepy.video.io.ffmpeg_tools import ffmpeg_merge_video_audio
+from PIL import Image
+from zugswang.elevenlabs import (generate_audio_from_text,
+                                 generate_audio_with_timestamps_from_text)
 
 narrations_dir = os.path.join("data", "narrations")
 narrations_with_timestamp_dir = os.path.join("data", "narrations_with_timestamps")
+# BANNER_HEIGHT = 400
+# SHOULD_ADD_BANNER = True
+# CAPTION_HEIGHT = 250
 
+BANNER_HEIGHT = 400
+SHOULD_ADD_BANNER = False
+CAPTION_HEIGHT = 350
 
 @dataclass
 class Narration:
@@ -176,10 +182,13 @@ class Scene:
                 .fx(vfx.resize, width=width*0.85)
                 .set_duration(audio_clip.duration)
             )
-        title_bg_color_clip = (
-            moviepy.editor.ColorClip(size=(width, 400), color=[0,0,0,127.5])
-            .set_duration(audio_clip.duration)
-        )
+        
+        title_bg_color_clip = None
+        if SHOULD_ADD_BANNER:
+            title_bg_color_clip = (
+                moviepy.editor.ColorClip(size=(width, BANNER_HEIGHT), color=[0,0,0,127.5])
+                .set_duration(audio_clip.duration)
+            )
         title_clip = (
             moviepy.editor.TextClip(self.name, fontsize=60, font="Bebas Neue Pro", color="white", bg_color="rgba(0,0,0,0)", method="caption", size=(width*0.85, None))
             .set_duration(audio_clip.duration)
@@ -193,8 +202,8 @@ class Scene:
         
         scene_clip = moviepy.editor.CompositeVideoClip(
             [
-                title_bg_color_clip.set_position("top"),
-                title_clip.set_position(["center", 250]).crossfadein(duration=1).crossfadeout(duration=1),
+                title_bg_color_clip.set_position("top") if title_bg_color_clip else None,
+                title_clip.set_position(["center", CAPTION_HEIGHT]).crossfadein(duration=1).crossfadeout(duration=1),
             ] + image_clips + caption_clips,
             size=(width, height),
         )
@@ -202,6 +211,6 @@ class Scene:
         scene_clip = scene_clip.set_duration(audio_clip.duration)
         print(f"Finished constructing scene: {id}_{self.unique_key}")
         scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
-        audio_clip.write_audiofile(file_path.replace(".mp4", ".mp3"))
+        # audio_clip.write_audiofile(file_path.replace(".mp4", ".mp3"))
 
         return scene_clip
