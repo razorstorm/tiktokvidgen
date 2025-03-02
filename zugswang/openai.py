@@ -9,7 +9,7 @@ load_dotenv()
 
 API_KEY = os.environ["OPENAI_API_KEY"]
 
-
+# asdf
 print(API_KEY)
 client = Client(api_key=API_KEY)
 

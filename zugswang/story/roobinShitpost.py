@@ -196,7 +196,7 @@ if __name__ == '__main__':
     from zugswang.utils import generate_video
 
     article_dir = "Roobinismlied"
-    setup_scenes_for_chapter_1()
+    setup_scenes_from_file(os.path.join("story", "roobin.json"))
     output_dir = os.path.join("data", "shitposts", article_dir)
     
     bg_image_filepath = os.path.join("data", "backgrounds", "scroll.jpg")

@@ -45,7 +45,7 @@ class Narration:
         os.makedirs(os.path.dirname(self.audio_path), exist_ok=True)
 
         if not os.path.exists(self.audio_path) or not os.path.exists(self.timestamp_path):
-            print("File not found")
+            print("Preexisting Audio File not found, regenerating narration")
             print("Text:")
             print(self.text, self.audio_path)
             print("Audio Hash")
@@ -199,12 +199,16 @@ class Scene:
         image_clips = []
         if image_clip:
             image_clips.append(image_clip.set_position(["center", 500]).crossfadein(duration=1).crossfadeout(duration=1))
+            
+        clips_to_join = [
+            title_bg_color_clip.set_position("top") if title_bg_color_clip else None,
+            title_clip.set_position(["center", CAPTION_HEIGHT]).crossfadein(duration=1).crossfadeout(duration=1),
+        ] + image_clips + caption_clips
+        
+        clips_to_join = [clip for clip in clips_to_join if clip]
         
         scene_clip = moviepy.editor.CompositeVideoClip(
-            [
-                title_bg_color_clip.set_position("top") if title_bg_color_clip else None,
-                title_clip.set_position(["center", CAPTION_HEIGHT]).crossfadein(duration=1).crossfadeout(duration=1),
-            ] + image_clips + caption_clips,
+            clips_to_join,
             size=(width, height),
         )
         scene_clip = scene_clip.set_audio(audio_clip)
