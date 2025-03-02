@@ -41,7 +41,7 @@ class Narration:
         if not os.path.exists(self.audio_path) or not os.path.exists(self.timestamp_path):
             print("File not found")
             print("Text:")
-            print(self.text)
+            print(self.text, self.audio_path)
             print("Audio Hash")
             print(self.audio_hash)
             print("----------------------")
@@ -111,7 +111,7 @@ class Narration:
 class Scene:
     name: str
     narration: Narration
-    media_filepath: str
+    media_filepath: str | None
     duration: float 
     caption: str
     
@@ -167,10 +167,9 @@ class Scene:
             return moviepy.editor.VideoFileClip(file_path, target_resolution=(height, width), audio=True)
         
         audio_clip = self.generate_audio_clip(pause_duration)
-
         image_clip = None
-        print("Getting image:", self.media_filepath)
         if self.media_filepath is not None:
+            print("Getting image:", self.media_filepath)
             image_clip = (
                 moviepy.editor.ImageClip(self.media_filepath)
                 .fl_image(lambda image: np.array(Image.fromarray(image).convert('RGB')))  # sometimes the image is missing a channel (?)
@@ -202,6 +201,7 @@ class Scene:
         scene_clip = scene_clip.set_audio(audio_clip)
         scene_clip = scene_clip.set_duration(audio_clip.duration)
         print(f"Finished constructing scene: {id}_{self.unique_key}")
-        # scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
+        scene_clip.write_videofile(file_path, fps=24, threads=32, verbose=False)
+        audio_clip.write_audiofile(file_path.replace(".mp4", ".mp3"))
 
         return scene_clip

@@ -2,8 +2,8 @@ import os
 from typing import List
 
 import openai
-from openai import Client
 from dotenv import load_dotenv
+from openai import Client
 
 load_dotenv()
 

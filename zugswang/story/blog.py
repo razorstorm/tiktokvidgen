@@ -1,15 +1,13 @@
+import inspect
 import json
 import os
-import inspect
 from typing import List
 
+import moviepy.video.fx.all as vfx
 import requests
-
+from moviepy.audio.fx.volumex import volumex
 from zugswang.models import Narration, Scene
 from zugswang.openai import generate_image
-
-import moviepy.video.fx.all as vfx
-from moviepy.audio.fx.volumex import volumex
 
 data_dir = os.path.join("data")
 
@@ -198,9 +196,9 @@ def setup_scenes() -> None:
 
 
 if __name__ == '__main__':
-    from zugswang.utils import generate_video
     import moviepy
     import moviepy.editor
+    from zugswang.utils import generate_video
 
     article_dir = "neurons"
     # setup_scenes()
