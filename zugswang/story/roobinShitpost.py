@@ -41,11 +41,9 @@ def get_narration(text: str):
     return Narration(text, voice_id=voice_id)
 
 
-def add_scene(name: str, narration: str | None = None, media_filepath: str | None = None, caption: str = None, duration: int = None) -> Scene:
+def add_scene(name: str, narration: str | None = None, media_filepath: str | None = None, caption: str = None, duration: int = None, isSilent: bool = False) -> Scene:
     narration_obj = None
-    narration_text = narration if narration else caption
-    if not narration_text:
-        raise ValueError("Either narration or caption must be provided")
+    narration_text = narration if narration else name
     if not caption:
         narration_obj = get_narration(narration_text)
     scene = Scene(name=name, narration=narration_obj, media_filepath=media_filepath, caption=caption, duration=duration)
